@@ -6,14 +6,6 @@
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality.
     -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!--         The BACKGROUND_LOCATION permission is required for geofencing functionality to work on Q+ -->
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
     <application
         android:name=".MyApp"
         android:allowBackup="true"
@@ -22,7 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".locationreminders.ReminderDescriptionActivity"></activity>
+        <activity
+            android:exported="false"
+            android:name=".locationreminders.ReminderDescriptionActivity"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -31,13 +25,13 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+        <activity
+            android:name=".authentication.AuthenticationActivity"
+            android:exported="false"/>
 
-        <activity android:name=".authentication.AuthenticationActivity">
-        </activity>
-        <activity android:name=".locationreminders.RemindersActivity" >
+        <activity
+            android:name=".locationreminders.RemindersActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,6 +39,11 @@
             </intent-filter>
 
         </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
         <receiver
             android:name=".locationreminders.geofence.GeofenceBroadcastReceiver"
             android:enabled="true"
@@ -54,5 +53,13 @@
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
+    <!--         The BACKGROUND_LOCATION permission is required for geofencing functionality to work on Q+ -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest>
