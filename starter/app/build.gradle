@@ -19,6 +19,7 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
+        resConfigs "en" // fore firebase auth language
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -66,6 +67,7 @@ dependencies {
     //Navigation dependencies
     implementation 'androidx.appcompat:appcompat:1.6.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.0-alpha06'
+    implementation 'com.google.firebase:firebase-auth-ktx:21.0.3'
     kapt "androidx.lifecycle:lifecycle-compiler:$archLifecycleVersion"
 //    implementation "androidx.lifecycle:lifecycle-extensions:$archLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$archLifecycleVersion"
@@ -131,5 +133,8 @@ dependencies {
     //Maps & Geofencing
     implementation "com.google.android.gms:play-services-location:$playServicesVersion"
     implementation "com.google.android.gms:play-services-maps:18.1.0"
+
+    //Firebase Auth
+    implementation "com.firebaseui:firebase-ui-auth:$firebaseVersion"
 
 }
