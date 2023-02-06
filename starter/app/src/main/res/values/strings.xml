@@ -44,6 +44,7 @@
     // Api Keys
     <string name="maps_api_key">AIzaSyAMAVMWJqJYsK1tEYhHVrq_pef6RPcH3AQ</string>
     <string name="Auth_api_key">AIzaSyBeNw7-2bV5oZiU1N2-Pqmi8ePT5xxBGCU</string>
+
     <string name="sign_in_cancelled">Sign in cancelled</string>
     <string name="no_internet_connection">Internet connection error</string>
     <string name="unknown_error">Unknon Error</string>
