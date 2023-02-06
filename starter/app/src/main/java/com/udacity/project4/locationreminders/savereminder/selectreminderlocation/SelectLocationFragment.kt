@@ -154,6 +154,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                     R.raw.map_style
                 )
             )
+            //Bassem
             if (!success) {
                 Log.e("=====", "Style parsing failed.")
             }
