@@ -2,6 +2,7 @@ package com.udacity.project4.locationreminders.savereminder.selectreminderlocati
 
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Resources
@@ -30,6 +31,7 @@ import org.koin.android.ext.android.inject
 import java.util.*
 
 class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
+
 
 
     //Use Koin to get the view model of the SaveReminder
@@ -61,11 +63,16 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
 
 //        TODO: call this function after the user confirms on the selected location
-        onLocationSelected()
 
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
+    }
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
@@ -78,7 +85,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         )
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
         setMapStyle(mMap)
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            getLocationPermission()
+        }
     }
 
     private fun onLocationSelected() {
@@ -94,24 +103,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
          * device. The result of the permission request is handled by a callback,
          * onRequestPermissionsResult.
          */
-//        if (ContextCompat.checkSelfPermission(
-//                this.requireContext(),
-//                Manifest.permission.ACCESS_FINE_LOCATION
-//            )
-//            == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-//                this.requireContext(),
-//                Manifest.permission.ACCESS_COARSE_LOCATION
-//            )
-//            == PackageManager.PERMISSION_GRANTED
-//        ) {
-//            locationPermissionGranted = true
-//        } else {
-//            ActivityCompat.requestPermissions(
-//                this.requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-//                PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
-//            )
-//        }
-
 
         val locationPermissionRequest = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -120,10 +111,12 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                 permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
                     // Precise location access granted.
                     Log.e("====", "Precise location granted")
+                    moveToCurrentLocation()
                 }
                 permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
                     // Only approximate location access granted.
                     Log.e("====", "Only approximate location access granted")
+                    moveToCurrentLocation()
                 }
                 else -> {
                     // No location access granted.
@@ -144,6 +137,11 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             )
         )
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun moveToCurrentLocation() {
+        mMap.isMyLocationEnabled = true
     }
 
     private fun setMapStyle(map: GoogleMap) {
@@ -193,6 +191,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        getLocationPermission()
+//        getLocationPermission()
     }
 }

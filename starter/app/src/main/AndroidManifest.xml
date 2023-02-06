@@ -56,6 +56,12 @@
             android:name=".locationreminders.geofence.GeofenceTransitionsJobIntentService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+
+<!--        <service-->
+<!--            android:name="MyNavigationService"-->
+<!--            android:foregroundServiceType="location" >-->
+<!--    </service>-->
+
     </application>
     <!--         The BACKGROUND_LOCATION permission is required for geofencing functionality to work on Q+ -->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
