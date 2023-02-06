@@ -4,17 +4,19 @@ package com.udacity.project4.locationreminders.savereminder.selectreminderlocati
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.location.Location
+import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -33,6 +35,7 @@ import java.util.*
 class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
 
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     //Use Koin to get the view model of the SaveReminder
     override val _viewModel: SaveReminderViewModel by inject()
@@ -48,13 +51,19 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
         binding.viewModel = _viewModel
         binding.lifecycleOwner = this
-        val mapFragment =
-            childFragmentManager.findFragmentById(binding.mapSelectLocation.id) as SupportMapFragment
-        mapFragment.getMapAsync(this)
 
+//        val mapFragment =
+//            childFragmentManager.findFragmentById(binding.mapSelectLocation.id) as SupportMapFragment
+//        mapFragment.getMapAsync(this)
 
         setHasOptionsMenu(true)
         setDisplayHomeAsUpEnabled(true)
+        val mapFragment =
+            childFragmentManager.findFragmentById(binding.mapSelectLocation.id) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+        fusedLocationClient =
+            LocationServices.getFusedLocationProviderClient(this.requireActivity())
+
 
 //        TODO: add the map setup implementation
 //        TODO: zoom to the user location after taking his permission
@@ -70,24 +79,20 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
     }
-    @RequiresApi(Build.VERSION_CODES.N)
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
 
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(
-            MarkerOptions()
-                .position(sydney)
-                .title("Marker in Sydney")
-        )
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
-        setMapStyle(mMap)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             getLocationPermission()
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
+        setMapStyle(mMap)
+
     }
 
     private fun onLocationSelected() {
@@ -126,11 +131,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             }
         }
 
-// ...
-
-// Before you perform the actual permission request, check whether your app
-// already has the permissions, and whether your app needs to show a permission
-// rationale dialog. For more details, see Request permissions.
         locationPermissionRequest.launch(
             arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -141,7 +141,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private fun moveToCurrentLocation() {
-        mMap.isMyLocationEnabled = true
+        getLocation()
     }
 
     private fun setMapStyle(map: GoogleMap) {
@@ -189,9 +189,39 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         else -> super.onOptionsItemSelected(item)
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-//        getLocationPermission()
+    private fun isLocationEnabled(): Boolean {
+        val locationManager: LocationManager =
+            this.activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        )
+    }
+
+    @SuppressLint("MissingPermission", "SetTextI18n")
+    private fun getLocation() {
+        if (isLocationEnabled()) {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    // Got last known location. In some rare situations this can be null.
+                    if (location != null) {
+                        val currentLocation =
+                            LatLng(location.latitude, location.longitude)
+                        mMap.addMarker(
+                            MarkerOptions()
+                                .position(currentLocation)
+                                .title("current location")
+                        )
+
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 10f))
+                    }else{
+                        Toast.makeText(this.requireContext(),"Location is null ",Toast.LENGTH_LONG).show()
+
+                    }
+                }
+
+        }else{
+            Toast.makeText(this.requireContext(),"Location is disabled ",Toast.LENGTH_LONG).show()
+        }
     }
 }
+
