@@ -9,13 +9,17 @@ import android.location.Location
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.motion.widget.Debug.getLocation
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
@@ -44,7 +48,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         MapsInitializer.initialize(this.requireContext(), MapsInitializer.Renderer.LATEST) {
-            Log.e("==error",it.name)
+            Log.e("==error", it.name)
         }
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_select_location, container, false)
@@ -64,7 +68,23 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         fusedLocationClient =
             LocationServices.getFusedLocationProviderClient(this.requireActivity())
 
+        var locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                super.onLocationResult(locationResult)
+                locationResult ?: return
+                for (location in locationResult.locations) {
 
+                    Log.e("==== location Update",""+location.altitude)
+
+                }
+            }
+        }
+
+        fusedLocationClient.requestLocationUpdates(
+           this.requireActivity().locationRequest,
+            locationCallback,
+            Looper.getMainLooper()
+        )
 //        TODO: add the map setup implementation
 //        TODO: zoom to the user location after taking his permission
 //        TODO: add style to the map
@@ -207,14 +227,26 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                         )
 
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 10f))
-                    }else{
-                        Toast.makeText(this.requireContext(),"Location is null ",Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(
+                            this.requireContext(),
+                            "Location is null ",
+                            Toast.LENGTH_LONG
+                        ).show()
 
                     }
                 }
-        }else{
-            Toast.makeText(this.requireContext(),"Location is disabled ",Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this.requireContext(), "Location is disabled ", Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun startLocationUpdates() {
+        fusedLocationClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            Looper.getMainLooper()
+        )
     }
 }
 
