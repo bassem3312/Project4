@@ -7,6 +7,7 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+apply plugin: 'org.jetbrains.kotlin.android'
 
 
 android {
@@ -69,6 +70,8 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.0-alpha06'
     implementation 'com.google.firebase:firebase-auth-ktx:21.0.3'
+    implementation 'androidx.core:core-ktx:+'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
     kapt "androidx.lifecycle:lifecycle-compiler:$archLifecycleVersion"
 //    implementation "androidx.lifecycle:lifecycle-extensions:$archLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$archLifecycleVersion"

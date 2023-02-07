@@ -3,13 +3,10 @@ package com.udacity.project4.locationreminders
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.FirebaseAuth
 import com.udacity.project4.R
 import com.udacity.project4.authentication.AuthenticationActivity
 
@@ -51,5 +48,12 @@ class RemindersActivity : AppCompatActivity() {
 
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        for (fragment in supportFragmentManager.fragments) {
+            fragment.onActivityResult(requestCode, resultCode, data)
+        }
     }
 }

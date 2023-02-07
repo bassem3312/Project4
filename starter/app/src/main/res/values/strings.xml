@@ -51,4 +51,6 @@
 
     <!--Shared Preference Keys -->
     <string name="preference_fact_type_key">fact_type_pref</string>
+    <string name="error_label">Error</string>
+    <string name="ok_label">OK</string>
 </resources>
