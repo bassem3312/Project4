@@ -3,10 +3,8 @@ package com.udacity.project4.locationreminders.savereminder.selectreminderlocati
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.res.Resources
 import android.location.Location
-import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -118,6 +116,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         _viewModel.latitude.value = lat
         _viewModel.longitude.value = lng
         _viewModel.selectedPOI.value = Poi
+        _viewModel.reminderSelectedLocationStr.value = title
         _viewModel.navigationCommand.postValue(NavigationCommand.Back)
 
     }
@@ -212,26 +211,15 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         else -> super.onOptionsItemSelected(item)
     }
 
-    private fun isLocationEnabled(): Boolean {
-        val locationManager: LocationManager =
-            this.activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-            LocationManager.NETWORK_PROVIDER
-        )
-    }
 
     @SuppressLint("MissingPermission", "SetTextI18n")
     private fun getLocation() {
-        if (isLocationEnabled()) {
+        if (GPSUtils(this.requireContext()).isGPSLocationEnabled()) {
             fusedLocationClient.lastLocation.addOnCompleteListener {
                 var location = it.result
                 // Got last known location. In some rare situations this can be null.
                 if (location != null) {
-
-                    mMap.isMyLocationEnabled = true
-
-                    mMap.moveCamera(CameraUpdateFactory.zoomIn())
-//                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 10f))
+                    setMapLocation(location)
                 } else {
                     Toast.makeText(this.requireContext(), "Location is null ", Toast.LENGTH_LONG)
                         .show()
@@ -241,9 +229,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                 // Got last known location. In some rare situations this can be null.
                 if (location != null) {
-                    mMap.isMyLocationEnabled = true
-
-                    mMap.moveCamera(CameraUpdateFactory.zoomIn())
+                    setMapLocation(location)
                 } else {
                     Toast.makeText(
                         this.requireContext(), "Location is null ", Toast.LENGTH_LONG
@@ -304,5 +290,11 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         }
     }
 
+    @SuppressLint("MissingPermission")
+    fun setMapLocation(location: Location) {
+        mMap.isMyLocationEnabled = true
+//        mMap.moveCamera(CameraUpdateFactory.zoomIn())
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude,location.longitude),5f))
+    }
 }
 

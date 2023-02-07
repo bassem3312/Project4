@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat.startIntentSenderForResult
+import androidx.core.content.ContextCompat.getSystemService
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
@@ -69,7 +70,10 @@ class GPSUtils(context: Context) {
                                 )
 
                             } catch (e: Exception) {
-                                Log.d(TAG, "turnOnGPS: Unable to start default functionality of GPS")
+                                Log.d(
+                                    TAG,
+                                    "turnOnGPS: Unable to start default functionality of GPS"
+                                )
                             }
 
                         } else {
@@ -90,4 +94,11 @@ class GPSUtils(context: Context) {
         }
     }
 
+    fun isGPSLocationEnabled(): Boolean {
+        val locationManager: LocationManager =
+            mContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        )
+    }
 }
