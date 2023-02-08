@@ -3,7 +3,11 @@ package com.udacity.project4.locationreminders.savereminder.selectreminderlocati
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.PendingIntent
+import android.content.Intent
+import android.content.IntentSender
 import android.content.res.Resources
+import android.location.Geocoder
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
@@ -13,19 +17,26 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
+import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.maps.*
+import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener
 import com.google.android.gms.maps.model.*
+import com.google.android.material.snackbar.Snackbar
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
+import com.udacity.project4.locationreminders.geofence.GeofenceBroadcastReceiver
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.utils.GPSUtils
 import com.udacity.project4.utils.displayErrorAlertDialog
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import org.koin.android.ext.android.inject
+import java.io.IOException
 import java.util.*
 
 
@@ -34,6 +45,17 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     private val TAG = "SelectLocationFragment"
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    private val geofencePendingIntent: PendingIntent by lazy {
+        val intent = Intent(this.context, GeofenceBroadcastReceiver::class.java)
+        intent.action = ACTION_GEOFENCE_EVENT
+        PendingIntent.getBroadcast(
+            this.requireContext(),
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+    }
 
     private var Poi: PointOfInterest? = null
     private var lat: Double = 0.0
@@ -226,17 +248,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
                 }
             }
-            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-                // Got last known location. In some rare situations this can be null.
-                if (location != null) {
-                    setMapLocation(location)
-                } else {
-                    Toast.makeText(
-                        this.requireContext(), "Location is null ", Toast.LENGTH_LONG
-                    ).show()
-
-                }
-            }
         } else {
 
 
@@ -294,7 +305,18 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     fun setMapLocation(location: Location) {
         mMap.isMyLocationEnabled = true
 //        mMap.moveCamera(CameraUpdateFactory.zoomIn())
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude,location.longitude),5f))
+        mMap.animateCamera(
+            CameraUpdateFactory.newLatLngZoom(
+                LatLng(
+                    location.latitude,
+                    location.longitude
+                ), 5f
+            )
+        )
+    }
+    companion object {
+        internal const val ACTION_GEOFENCE_EVENT =
+            "SelectionFragment.action.ACTION_GEOFENCE_EVENT"
     }
 }
 

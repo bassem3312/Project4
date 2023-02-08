@@ -43,7 +43,7 @@ class AuthenticationActivity : AppCompatActivity() {
 
                     isAuthonticated = true
                     FirebaseAuth.getInstance().currentUser?.let {
-                        it.displayName?.let { it1 -> showSnackBar(it1) }
+                        it.displayName?.let { it1 -> Log.e(TAG, "Welcome :$it1") }
                         it.email?.let { it1 -> binding.tvWelcomeLoginMessage.text = it1 }
                     }
                     startActivity(
@@ -56,7 +56,8 @@ class AuthenticationActivity : AppCompatActivity() {
                 }
                 else -> {
                     isAuthonticated = false
-                    binding.tvWelcomeLoginMessage.text = getString(R.string.welcome_to_the_location_reminder_app)
+                    binding.tvWelcomeLoginMessage.text =
+                        getString(R.string.welcome_to_the_location_reminder_app)
                     Log.e(
                         TAG,
                         "Authentication state that doesn't require any UI change $authenticationState"

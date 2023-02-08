@@ -12,14 +12,14 @@ import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 import kotlinx.coroutines.launch
 
-class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSource) :
+class SaveReminderViewModel(val app: Application, private val dataSource: ReminderDataSource) :
     BaseViewModel(app) {
     val reminderTitle = MutableLiveData<String?>()
     val reminderDescription = MutableLiveData<String?>()
     val reminderSelectedLocationStr = MutableLiveData<String?>()
     val selectedPOI = MutableLiveData<PointOfInterest?>()
-    val latitude = MutableLiveData<Double?>()
-    val longitude = MutableLiveData<Double?>()
+    val latitude = MutableLiveData<Double>()
+    val longitude = MutableLiveData<Double>()
 
     /**
      * Clear the live data objects to start fresh next time the view model gets called
@@ -29,8 +29,8 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
         reminderDescription.value = null
         reminderSelectedLocationStr.value = null
         selectedPOI.value = null
-        latitude.value = null
-        longitude.value = null
+        latitude.value = 0.0
+        longitude.value = 0.0
     }
 
     /**
