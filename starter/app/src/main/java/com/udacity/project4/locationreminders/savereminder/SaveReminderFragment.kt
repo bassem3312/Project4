@@ -165,9 +165,9 @@ class SaveReminderFragment : BaseFragment() {
 
         val client = LocationServices.getGeofencingClient(requireContext())
 
-        client.addGeofences(request, pendingIntent)?.run {
+        client.addGeofences(request, pendingIntent).run {
             addOnSuccessListener {
-                Log.d(TAG, "Added geofence. Reminder has id $geofenceId .")
+                Log.e(TAG, "Added geofence. Reminder has id $geofenceId .")
             }
             addOnFailureListener { e ->
                 val errorMessage: String? = e.localizedMessage
