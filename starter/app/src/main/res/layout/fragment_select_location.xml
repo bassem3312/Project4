@@ -11,10 +11,10 @@
         <Button
             android:id="@+id/btn_save_location"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:text="@string/save"
             android:background="@color/colorAccent"
+            android:text="@string/save"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_percent="0.1"

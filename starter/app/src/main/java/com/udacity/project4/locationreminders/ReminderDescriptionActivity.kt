@@ -2,7 +2,9 @@ package com.udacity.project4.locationreminders
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.udacity.project4.R
@@ -32,6 +34,14 @@ class ReminderDescriptionActivity : AppCompatActivity() {
             this,
             R.layout.activity_reminder_description
         )
+        binding.reminderDataItem = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(EXTRA_ReminderDataItem, ReminderDataItem::class.java)
+        } else {
+            TODO("VERSION.SDK_INT < TIRAMISU")
+            intent.getParcelableExtra(EXTRA_ReminderDataItem)
+        }
+
+
 //        TODO: Add the implementation of the reminder details
     }
 }
