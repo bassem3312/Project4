@@ -24,7 +24,6 @@ import org.junit.Test
 //Unit test the DAO
 @SmallTest
 class RemindersDaoTest {
-
 //    TODO: Add testing implementation to the RemindersDao.kt
 
 }
