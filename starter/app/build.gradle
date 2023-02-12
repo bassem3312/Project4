@@ -80,6 +80,8 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
     implementation "androidx.test.espresso:espresso-idling-resource:$espressoVersion"
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'
+
 
     //Room dependencies
     implementation "androidx.room:room-ktx:$roomVersion"
@@ -131,8 +133,6 @@ dependencies {
     androidTestImplementation "org.mockito:mockito-core:$mockitoVersion"
     androidTestImplementation "com.linkedin.dexmaker:dexmaker-mockito:$dexMakerVersion"
     androidTestImplementation('io.insert-koin:koin-test:3.3.2') { exclude group: 'org.mockito' }
-
-
 
     //Maps & Geofencing
     implementation "com.google.android.gms:play-services-location:$playServicesVersion"

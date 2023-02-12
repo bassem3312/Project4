@@ -31,7 +31,7 @@ import org.koin.android.ext.android.inject
 import java.util.*
 
 class SaveReminderFragment : BaseFragment() {
-    private var isBackgroungLocationPermissionEnabled: Boolean = false
+    private var isBackgroundLocationPermissionEnabled: Boolean = false
 
     //Get the view model this time as a single to be shared with the another fragment
     override val _viewModel: SaveReminderViewModel by inject()
@@ -43,10 +43,10 @@ class SaveReminderFragment : BaseFragment() {
             ActivityResultContracts.RequestPermission()
         ) {
             if (it) {
-                isBackgroungLocationPermissionEnabled = true
+                isBackgroundLocationPermissionEnabled = true
                 saveReminderAndCreateGeofence()
             } else {
-                isBackgroungLocationPermissionEnabled = false
+                isBackgroundLocationPermissionEnabled = false
                 displayErrorAlertDialog(
                     this.requireActivity(),
                     getString(R.string.permission_denied_explanation),
@@ -80,7 +80,7 @@ class SaveReminderFragment : BaseFragment() {
         }
 
         binding.saveReminder.setOnClickListener {
-            if (!isBackgroungLocationPermissionEnabled)
+            if (!isBackgroundLocationPermissionEnabled)
                 enableBackGroundPermission()
             else {
                 saveReminderAndCreateGeofence()
@@ -126,7 +126,8 @@ class SaveReminderFragment : BaseFragment() {
                 description,
                 location,
                 latitude,
-                longitude
+                longitude,
+                geofenceId
             )
         )
     }

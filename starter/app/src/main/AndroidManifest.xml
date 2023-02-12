@@ -6,8 +6,18 @@
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality.
     -->
-
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!--         The BACKGROUND_LOCATION permission is required for geofencing functionality to work on Q+ -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:name=".MyApp"
         android:allowBackup="true"
@@ -43,36 +53,15 @@
 
         </activity>
 
-<!--        <meta-data-->
-<!--            android:name="com.google.android.geo.API_KEY"-->
-<!--            android:value="@string/google_maps_key" />-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
+
         <receiver
             android:name=".locationreminders.geofence.GeofenceBroadcastReceiver"
             android:enabled="true"
             android:exported="true" />
-<!--        <service-->
-<!--            android:name=".locationreminders.geofence.GeofenceTransitionsJobIntentService"-->
-<!--            android:exported="true"-->
-<!--            android:permission="android.permission.BIND_JOB_SERVICE" />-->
-
-<!--        <service-->
-<!--            android:name="MyNavigationService"-->
-<!--            android:foregroundServiceType="location" >-->
-<!--    </service>-->
 
     </application>
-    <!--         The BACKGROUND_LOCATION permission is required for geofencing functionality to work on Q+ -->
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
 </manifest>
