@@ -1,6 +1,5 @@
 package com.udacity.project4.locationreminders.reminderslist
 
-import android.content.Context
 import android.os.Bundle
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.fragment.app.testing.launchFragmentInContainer
@@ -55,7 +54,7 @@ class ReminderListFragmentTest :KoinTest{
         //stop koin
         stopKoin()
         //create koin module
-        val myModule= module {
+        val testModule= module {
             viewModel {
                 RemindersListViewModel(
                     getApplicationContext(),
@@ -77,7 +76,7 @@ class ReminderListFragmentTest :KoinTest{
         }
         //start koin with the created module
         startKoin {
-            modules(listOf(myModule))
+            modules(listOf(testModule))
         }
         //get real repository
         repository=get()
@@ -87,7 +86,7 @@ class ReminderListFragmentTest :KoinTest{
         }
     }
     @Test
-    fun clickOnAddReminderButton_NavigateToSaveReminderFragment()
+    fun clickOnAddReminderButton_NavigateToSaveReminderFragment_Test()
     {
         //  GIVEN - on the reminders List screen
         val scenario= launchFragmentInContainer<ReminderListFragment>(Bundle(),R.style.AppTheme)
@@ -104,10 +103,10 @@ class ReminderListFragmentTest :KoinTest{
     }
     //    TODO: test the displayed data on the UI.
     @Test
-    fun saveReminder_DisplayInUI()
+    fun saveReminder_DisplayInUI_Test()
     {
         //dummy reminder
-        val reminder= ReminderDTO("Youssef","Mohamed","Rashed",1.0,1.0)
+        val reminder= ReminderDTO("reminder1","Reminder Description","Location",1.0,1.0)
         //save the reminder
         runBlocking {
             repository.saveReminder(reminder)
@@ -127,7 +126,7 @@ class ReminderListFragmentTest :KoinTest{
     }
     //    TODO: add testing for the error messages.
     @Test
-    fun noReminders_CheckUI()
+    fun noReminders_CheckUI_Test()
     {
         //Delete all reminders
         runBlocking {

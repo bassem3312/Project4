@@ -39,18 +39,18 @@ class GeofenceBroadcastReceiver : BroadcastReceiver(), CoroutineScope {
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO
-    private val geofenceHelper: MyHelper by lazy { MyHelper() }
+    private val geofenceHelper: GeofenceHelper by lazy { GeofenceHelper() }
 
     override fun onReceive(context: Context, intent: Intent) {
         geofenceHelper.onReceive(context, intent)
 
     }
 
-    class MyHelper : KoinComponent {
+    class GeofenceHelper : KoinComponent {
         private val remindersLocalRepository: ReminderDataSource by inject()
 
         fun onReceive(context: Context, intent: Intent) {
-            Log.e("===", "on receiving to location")
+            Log.e(TAG, "on receiving geofence to location")
             val geofencingEvent = GeofencingEvent.fromIntent(intent)
             if (geofencingEvent != null) {
                 if (geofencingEvent.hasError()) {
