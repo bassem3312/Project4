@@ -290,7 +290,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             lng = poi.latLng.longitude
             title = poi.name
             isLocationSelected = true
-
         }
     }
 

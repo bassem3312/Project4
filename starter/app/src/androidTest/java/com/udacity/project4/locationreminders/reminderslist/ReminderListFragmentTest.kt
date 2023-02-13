@@ -39,22 +39,24 @@ import org.mockito.Mockito.verify
 @ExperimentalCoroutinesApi
 //UI Testing
 @MediumTest
-class ReminderListFragmentTest :KoinTest{
+class ReminderListFragmentTest : KoinTest {
 
 //    TODO: test the navigation of the fragments.
 //    TODO: test the displayed data on the UI.
 //    TODO: add testing for the error messages.
 
     private lateinit var repository: ReminderDataSource
+
     //execute each task synchronously using architecture component
     @get:Rule
-    private var instantTaskExecutorRule= InstantTaskExecutorRule()
+    private var instantTaskExecutorRule = InstantTaskExecutorRule()
+
     @Before
-    fun init(){
+    fun init() {
         //stop koin
         stopKoin()
         //create koin module
-        val testModule= module {
+        val testModule = module {
             viewModel {
                 RemindersListViewModel(
                     getApplicationContext(),
@@ -79,20 +81,20 @@ class ReminderListFragmentTest :KoinTest{
             modules(listOf(testModule))
         }
         //get real repository
-        repository=get()
+        repository = get()
         //clear data
         runBlocking {
             repository.deleteAllReminders()
         }
     }
+
     @Test
-    fun clickOnAddReminderButton_NavigateToSaveReminderFragment_Test()
-    {
+    fun clickOnAddReminderButton_NavigateToSaveReminderFragment_Test() {
         //  GIVEN - on the reminders List screen
-        val scenario= launchFragmentInContainer<ReminderListFragment>(Bundle(),R.style.AppTheme)
-        val navController= mock(NavController::class.java)
+        val scenario = launchFragmentInContainer<ReminderListFragment>(Bundle(), R.style.AppTheme)
+        val navController = mock(NavController::class.java)
         scenario.onFragment {
-            Navigation.setViewNavController(it.view!!,navController)
+            Navigation.setViewNavController(it.view!!, navController)
         }
         //WHEN - click on add reminder button
         onView(withId(R.id.addReminderFAB)).perform(click())
@@ -101,19 +103,18 @@ class ReminderListFragmentTest :KoinTest{
             ReminderListFragmentDirections.toSaveReminder()
         )
     }
+
     //    TODO: test the displayed data on the UI.
     @Test
-    fun saveReminder_DisplayInUI_Test()
-    {
+    fun saveReminder_DisplayInUI_Test() {
         //dummy reminder
-        val reminder= ReminderDTO("reminder1","Reminder Description","Location",1.0,1.0)
+        val reminder = ReminderDTO("reminder1", "Reminder Description", "Location", 1.0, 1.0)
         //save the reminder
         runBlocking {
             repository.saveReminder(reminder)
         }
-        //  GIVEN - on the reminders List screen
-        val scenario= launchFragmentInContainer<ReminderListFragment>(Bundle(),R.style.AppTheme)
-        //  THEN - verify data displayed
+
+        //then
         onView(withId(R.id.title)).check(ViewAssertions.matches(ViewMatchers.withText(reminder.title)))
         onView(withId(R.id.description)).check(ViewAssertions.matches(ViewMatchers.withText(reminder.description)))
         onView(withId(R.id.tv_location_poi_name)).check(
@@ -124,16 +125,16 @@ class ReminderListFragmentTest :KoinTest{
             )
         )
     }
+
     //    TODO: add testing for the error messages.
     @Test
-    fun noReminders_CheckUI_Test()
-    {
+    fun noReminders_CheckUI_Test() {
         //Delete all reminders
         runBlocking {
             repository.deleteAllReminders()
         }
         //  GIVEN - on the reminders List screen
-        val scenario= launchFragmentInContainer<ReminderListFragment>(Bundle(),R.style.AppTheme)
+        val scenario = launchFragmentInContainer<ReminderListFragment>(Bundle(), R.style.AppTheme)
         //  THEN - no data textview is displayed
         onView(withId(R.id.noDataTextView)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
